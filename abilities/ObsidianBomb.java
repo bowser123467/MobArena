@@ -19,6 +19,8 @@ public class ObsidianBomb implements Ability
      */
     private final int FUSE = 80;
     
+    private final int MAX_DISTANCE = 10;//Max distance a bomb can be placed
+    
     @Override
     public void execute(final Arena arena, MABoss boss) {
         // Grab the target, or a random player.
@@ -26,7 +28,12 @@ public class ObsidianBomb implements Ability
         
         final World world = arena.getWorld();
         final Location loc = target.getLocation();
-        
+        if(loc.distance(boss.getEntity().getLocation()) > MAX_DISTANCE){ 
+           /*
+            Sometimes when a dead player is targeted the bomb is placed at spawn, exit lobby, eg. This will fix that.
+           */
+           return;
+        }
         Block b = world.getBlockAt(loc); 
         b.setType(Material.OBSIDIAN);
         arena.addBlock(b);
